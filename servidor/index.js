@@ -7,9 +7,12 @@ const app = express();
 //COnectar a la BD
 conectarDB();
 
+<<<<<<< HEAD
 //Habilitar express.json
 app.use(express.json({ extended: true }));
 
+=======
+>>>>>>> master
 //Puerto de la app
 const PORT = process.env.PORT || 4000;
 
