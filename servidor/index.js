@@ -7,12 +7,9 @@ const app = express();
 //COnectar a la BD
 conectarDB();
 
-<<<<<<< HEAD
 //Habilitar express.json
 app.use(express.json({ extended: true }));
 
-=======
->>>>>>> master
 //Puerto de la app
 const PORT = process.env.PORT || 4000;
 
@@ -24,6 +21,7 @@ const PORT = process.env.PORT || 4000;
 
 //Importar rutas
 app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/auth', require('./routes/auth'));
 
 //Arrancar Servidor
 app.listen(PORT, () => {

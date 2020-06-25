@@ -3,7 +3,7 @@ const bcryptjs = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 
-exports.crearUsuario = async (req, res) => {
+exports.autenticarUsuario = async (req, res) => {
 
     //Revisar si hay errores
     const errores = validationResult(req);
@@ -14,27 +14,22 @@ exports.crearUsuario = async (req, res) => {
     const {email, password} = req.body;
     
     try {
-        //Revisar que el usaurio registrado sea unico
-        let usuario = await Usuario.findOne({email});
-        if(usuario) {
-            res.status(400).json({msg: 'El usuario ya existe'});
+       //Revisar que sea un usaurio registrado
+       let usuario = await Usuario.findOne({email});
+       if(!usuario){
+            res.status(400).json({msg: 'El usuario no existe'});
+       }
+       //Revisar su password
+       const PassCorrecto = await bcryptjs.compare(password,usuario.password);
+       if(!PassCorrecto){
+            res.status(400).json({msg: 'Password incorrecto'});
+       }
+
+       //Si todo es correcto  Crear y firmar el jsonwebtoken
+       const payload = {
+        usuario:{
+            id: usuario.id
         }
-
-        //crea un nuevo Usuario
-        usuario = new Usuario(req.body);
-
-        //Hashear el password
-        const salt = await bcryptjs.genSalt(10);
-        usuario.password = await bcryptjs.hash(password,salt);
-
-        //guardar el usuario
-        await usuario.save();
-
-        //Crear y firmar el jsonwebtoken
-        const payload = {
-            usuario:{
-                id: usuario.id
-            }
         };
         //Firmar el JWT
         jwt.sign(payload,process.env.SECRETA, {
@@ -45,8 +40,9 @@ exports.crearUsuario = async (req, res) => {
             //Mensaje de confirmacion
             res.json({ token });
         })
+    
     } catch(error){
         console.log(error);
-        res.status(400).send('Hubo un error');
+        //res.status(400).send('Hubo un error');
     }
 }
