@@ -2,6 +2,7 @@ import React, { Fragment, useContext} from 'react';
 import Tarea from './Tarea';
 import proyectoContext from '../../context/proyectos/proyectoContext';
 import tareaContext from '../../context/tareas/tareaContext';
+import AlertaContext from '../../context/alertas/alertaContext';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 
@@ -15,6 +16,9 @@ const ListadoTareas = () => {
     const tareasContext = useContext(tareaContext);
     const {tareasproyecto } = tareasContext;
 
+    const alertaContext = useContext(AlertaContext);
+    const {alerta, mostrarAlerta} = alertaContext;
+
     // Si no hay proyecto seleccionado
     if(!proyecto) return <h2>Selecciona un proyecto</h2>;
 
@@ -23,7 +27,7 @@ const ListadoTareas = () => {
 
     // Elimina un proyecto
     const onClickEliminar = () => {
-        eliminarProyecto(proyectoActual.id);
+        eliminarProyecto(proyectoActual._id);
        // eliminarProyecto(proyectoActual._id)
     }
 
