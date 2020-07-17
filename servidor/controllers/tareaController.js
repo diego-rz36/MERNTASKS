@@ -42,7 +42,7 @@ exports.crearTarea =  async (req, res) => {
 exports.obtenerTareas = async (req, res) => {
     //extraer el rpoyecto
     try {
-        const {proyecto} = req.body;
+        const {proyecto} = req.query;
 
         const existeProyecto = await Proyecto.findById(proyecto);
         if(!existeProyecto) {
@@ -99,13 +99,10 @@ exports.actualizarTarea = async(req,res) => {
         }
 
         const nuevaTarea = {};
+                
+        nuevaTarea.nombre = nombre;
+        nuevaTarea.estado = estado;
         
-        if(nombre) {
-            nuevaTarea.nombre = nombre;
-        }
-        if(estado) {
-            nuevaTarea.estado = estado;
-        }
 
         //Guardar la tarea
         tarea = await Tarea.findOneAndUpdate({_id: req.params.id}, nuevaTarea, {new:true});
@@ -122,7 +119,7 @@ exports.actualizarTarea = async(req,res) => {
 exports.eliminarTarea = async(req,res) => {
     try {
         //REvisarque exista el proyecto
-        const {proyecto} = req.body;
+        const {proyecto} = req.query;
 
         //Buscar la tarea
         let tarea = await Tarea.findById(req.params.id);
